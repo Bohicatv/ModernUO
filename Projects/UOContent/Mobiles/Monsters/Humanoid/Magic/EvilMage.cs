@@ -39,8 +39,17 @@ namespace Server.Mobiles
 
             VirtualArmor = 16;
             PackReg(6);
-            PackItem(new Robe(Utility.RandomNeutralHue()));
-            PackItem(new Sandals());
+            
+            if (Core.UOR)
+            {
+                PackItem(new Robe(Utility.RandomNeutralHue()));
+                EquipItem(new Sandals());
+            }
+            else
+            {
+                EquipItem(new Robe(Utility.RandomNeutralHue()));
+                EquipItem(new Sandals());
+            }
         }
 
         public override string CorpseName => "an evil mage corpse";
