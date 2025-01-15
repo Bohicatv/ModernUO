@@ -19,8 +19,12 @@ public abstract partial class FillableContainer : LockableContainer
         }
     }
 
-    public FillableContainer(int itemID) : base(itemID) => Movable = false;
-
+    public FillableContainer(int itemID) : base(itemID)
+    {
+        Movable = false;
+        ContentType = FillableContentType.None;
+    }
+    
     public virtual int MinRespawnMinutes => 60;
     public virtual int MaxRespawnMinutes => 90;
 
@@ -75,14 +79,18 @@ public abstract partial class FillableContainer : LockableContainer
 
     public virtual void AcquireContent()
     {
-        if (_contentType != FillableContentType.None)
+        if (_contentType == FillableContentType.None)
         {
-            return;
+            if (this is LibraryBookcase)
+            {
+                _contentType = FillableContentType.Library;
+            }
+            else
+            {
+                _contentType = FillableContent.Acquire(GetWorldLocation(), Map);
+            }
         }
-
-        // Don't trigger serialization code
-        _contentType = FillableContent.Acquire(GetWorldLocation(), Map);
-
+    
         if (_contentType != FillableContentType.None)
         {
             Respawn();
